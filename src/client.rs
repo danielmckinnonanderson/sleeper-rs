@@ -1,10 +1,7 @@
 use std::collections::HashMap;
 use crate::data::*;
 
-use serde::{ Serialize, Deserialize };
 use serde_json::Value;
-use thiserror::Error;
-
 
 const BASE_URL: &str = "https://api.sleeper.app/v1";
 

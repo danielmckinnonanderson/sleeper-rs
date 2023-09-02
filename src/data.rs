@@ -161,29 +161,29 @@ pub enum RosterPosition {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Roster {
-    pub taxi: Option<String>,
+    pub taxi: Value,
     pub starters: Vec<String>,
-    pub settings: RosterSettings,
+    pub settings: Value,
     pub roster_id: u8,
-    pub reserve: Option<String>,
+    pub reserve: Value,
     pub players: Vec<String>,
-    pub player_map: Option<PlayerId>,
+    pub player_map: Value,
     pub owner_id: String,
-    pub metadata: Option<HashMap<String, String>>,
+    pub metadata: Value,
     pub league_id: LeagueId,
-    pub keepers: Option<Vec<String>>,
-    pub co_owners: Option<Vec<String>>
+    pub keepers: Value,
+    pub co_owners: Value, 
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct RosterSettings {
     pub wins: u8,
-    pub waiver_position: u8,
-    pub waiver_budget_used: u8,
-    pub total_moves: u16,
-    pub ties: u8,
-    pub losses: u8,
-    pub fpts: u8,
+    pub waiver_position: u16,
+    pub waiver_budget_used: u32,
+    pub total_moves: u32,
+    pub ties: u16,
+    pub losses: u16,
+    pub fpts: f64,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -191,7 +191,7 @@ pub struct SleeperUser {
     pub user_id: String,
     pub username: Option<String>,
     pub settings: Option<HashMap<String, String>>,
-    // TODO - metadata has one important field "team_name that should be communicated"
+    // TODO - metadata has one important field "team_name" that should be communicated
     pub metadata: Option<HashMap<String, String>>, 
     pub is_owner: bool,
     pub is_bot: bool,
