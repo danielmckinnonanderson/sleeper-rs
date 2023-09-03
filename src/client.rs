@@ -98,9 +98,9 @@ impl Client {
     }
 
     // Be careful, it's thicccc
-    pub async fn get_all_players(&self, sport: SleeperSport) -> Result<HashMap<String, Value>, SleeperError> {
+    pub async fn get_all_players(&self, sport: SleeperSport) -> Result<HashMap<PlayerId, Value>, SleeperError> {
 
-        fn parse_into_player_map(players_unparsed: &str) -> Result<HashMap<String, Value>, SleeperError> {
+        fn parse_into_player_map(players_unparsed: &str) -> Result<HashMap<PlayerId, Value>, SleeperError> {
             let mut result: HashMap<String, Value> = HashMap::new();
             let parsed_node: serde_json::Value = serde_json::from_str(players_unparsed).unwrap();
 

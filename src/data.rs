@@ -169,7 +169,7 @@ pub struct Roster {
     pub reserve: Value,
     pub players: Vec<String>,
     pub player_map: Value,
-    pub owner_id: String,
+    pub owner_id: OwnerId,
     pub metadata: Value,
     pub league_id: LeagueId,
     pub keepers: Value,
