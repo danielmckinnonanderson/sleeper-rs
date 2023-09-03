@@ -6,6 +6,7 @@ use thiserror::Error;
 
 pub type LeagueId = String;
 pub type PlayerId = String;
+pub type OwnerId = String;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct League {
