@@ -9,6 +9,14 @@ pub struct Client {
     client: reqwest::Client
 }
 
+pub enum AllPlayers {
+    NFL(HashMap<PlayerId, NflPlayer>),
+    // TODO
+    LCS(HashMap<PlayerId, Value>),
+    // TODO
+    NBA(HashMap<PlayerId, Value>),
+}
+
 impl Client {
     pub fn new() -> Self {
         Client {
@@ -98,20 +106,17 @@ impl Client {
     }
 
     // Be careful, it's thicccc
-    pub async fn get_all_players(&self, sport: SleeperSport) -> Result<HashMap<PlayerId, Value>, SleeperError> {
+    pub async fn get_all_players(&self, sport: SleeperSport) -> Result<AllPlayers, SleeperError> {
 
-        fn parse_into_player_map(players_unparsed: &str) -> Result<HashMap<PlayerId, Value>, SleeperError> {
-            let mut result: HashMap<String, Value> = HashMap::new();
-            let parsed_node: serde_json::Value = serde_json::from_str(players_unparsed).unwrap();
-
-            if let Value::Object(map) = parsed_node {
-                for (key, value) in map {
-                    // match value { } // TODO - could drill down on parsing a little deeper here
-                    result.insert(key, value);
+        fn to_hashmap_nfl(players_unparsed: &str) -> Result<HashMap<PlayerId, NflPlayer>, SleeperError> {
+            let parsed = match serde_json::from_str::<HashMap<PlayerId, NflPlayer>>(players_unparsed) {
+                Ok(p) => p,
+                Err(e) => {
+                    panic!("Data model for all players is bad! {}", e);
                 }
             };
 
-            Ok(result)
+            Ok(parsed)
         }
 
         let url = format!("{}/players/{}", BASE_URL, &sport.to_string());
@@ -123,7 +128,36 @@ impl Client {
 
         // TODO - revisit type
         match res.text_with_charset("utf-8").await {
-            Ok(p) => parse_into_player_map(&p),
+            Ok(players_raw) => {
+                match sport {
+                    SleeperSport::NFL => {
+                        if let Ok(result) = to_hashmap_nfl(players_raw.as_ref()) {
+                            Ok(AllPlayers::NFL(result))
+                        } else {
+                            Err(SleeperError::DeserializationError("Error trying to deserialize from JSON raw string to HashMap<PlayerId, NflPlayer>".to_string()))
+                        }
+                    }
+                    SleeperSport::LCS => todo!(),
+                    SleeperSport::NBA => todo!(),
+                }
+            }
+            Err(_) => Err(SleeperError::DeserializationError(String::from("String"))) // TODO lol
+        }
+    }
+
+    /// Use this to request the 'get players' endpoint with the provided sport,
+    ///   without parsing the resp body.
+    pub async fn get_all_players_unparsed(&self, sport: SleeperSport) -> Result<Value, SleeperError> {
+        let url = format!("{}/players/{}", BASE_URL, &sport.to_string());
+        
+        let res = match self.client.get(&url).send().await {
+            Ok(res) => res,
+            Err(e) => return Err(SleeperError::NetworkError(e.status()))
+        };
+
+        // TODO - revisit type
+        match res.text_with_charset("utf-8").await {
+            Ok(p) => Ok(serde_json::json!(p)),
             Err(_) => Err(SleeperError::DeserializationError(String::from("String"))) // TODO lol
         }
     }
