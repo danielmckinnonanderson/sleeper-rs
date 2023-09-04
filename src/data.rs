@@ -254,7 +254,7 @@ impl InjuryStatus {
         }
     }
 
-    pub fn from_opt_string(s: Option<String>) -> Result<InjuryStatus, SleeperError> {
+    pub fn from_opt_string(s: Option<String>) -> Result<Self, SleeperError> {
         match s {
             Some(s) => InjuryStatus::from_str(s.as_ref()),
             None => Ok(InjuryStatus::Healthy)
