@@ -9,13 +9,6 @@ pub struct Client {
     client: reqwest::Client
 }
 
-pub enum AllPlayers {
-    NFL(HashMap<PlayerId, NflPlayer>),
-    // TODO
-    LCS(HashMap<PlayerId, Value>),
-    // TODO
-    NBA(HashMap<PlayerId, Value>),
-}
 
 impl Client {
     pub fn new() -> Self {

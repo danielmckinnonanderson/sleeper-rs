@@ -250,7 +250,7 @@ impl InjuryStatus {
         match node {
             Value::String(s) => InjuryStatus::from_str(s),
             Value::Null => Ok(InjuryStatus::Healthy),
-            unmatched => Err(SleeperError::InvalidInjuryStatus("{ an object }".to_string()))
+            _ => Err(SleeperError::InvalidInjuryStatus("{ an object }".to_string()))
         }
     }
 
@@ -344,6 +344,14 @@ pub struct NflPlayer {
     pub height: Option<String>,
 }
 
+pub enum AllPlayers {
+    NFL(HashMap<PlayerId, NflPlayer>),
+    // TODO
+    LCS(HashMap<PlayerId, Value>),
+    // TODO
+    NBA(HashMap<PlayerId, Value>),
+}
+
 #[derive(Error, Debug)]
 pub enum SleeperError {
     #[error("could not deserialize Sleeper response into provided type")]
@@ -358,5 +366,4 @@ pub enum SleeperError {
     #[error("could parse String into PlayerStatus: \"{0}\" was not a valid injury designation")]
     InvalidInjuryStatus(String)
 }
-
 
