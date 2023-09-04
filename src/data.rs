@@ -253,6 +253,13 @@ impl InjuryStatus {
             unmatched => Err(SleeperError::InvalidInjuryStatus("{ an object }".to_string()))
         }
     }
+
+    pub fn from_opt_string(s: Option<String>) -> Result<InjuryStatus, SleeperError> {
+        match s {
+            Some(s) => InjuryStatus::from_str(s.as_ref()),
+            None => Ok(InjuryStatus::Healthy)
+        }
+    }
 }
 
 impl SleeperSport {
@@ -279,8 +286,8 @@ pub struct SportState {
     pub week: u8,
     pub season_type: String,
     pub season_start_date: String, // TODO this is a date in fmt YYYY-MM-DD
-    pub season: String, // TODO this is year in fmt YYYY
-    pub previous_season: String, // TODO this is year in fmt YYYY
+    pub season: String,            // TODO this is year in fmt YYYY
+    pub previous_season: String,   // TODO this is year in fmt YYYY
     pub leg: u8,
     pub league_season: String,
     pub league_create_season: String,
