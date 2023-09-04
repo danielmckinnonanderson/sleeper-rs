@@ -22,6 +22,7 @@ impl Client {
         Client {
             client: reqwest::Client::builder()
                 .https_only(true)
+                .timeout(std::time::Duration::new(10, 0))
                 .build()
                 .unwrap()
         }
