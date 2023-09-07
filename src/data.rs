@@ -279,6 +279,21 @@ impl InjuryStatus {
     }
 }
 
+impl fmt::Display for InjuryStatus {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            InjuryStatus::Healthy        => write!(f, "Healthy"),
+            InjuryStatus::InjuredReserve => write!(f, "Injured Reserve"),
+            InjuryStatus::Covid          => write!(f, "COVID-19"),
+            InjuryStatus::NotActive      => write!(f, "Inactive"),
+            InjuryStatus::Out            => write!(f, "Out"),
+            InjuryStatus::PUP            => write!(f, "PUP"),
+            InjuryStatus::Questionable   => write!(f, "Questionable"),
+            InjuryStatus::Suspended      => write!(f, "Suspended")
+        }
+    }
+}
+
 impl SleeperSport {
     pub fn from_str(str: &str) -> Result<SleeperSport, SleeperError> {
         match str.to_lowercase().as_str() {
