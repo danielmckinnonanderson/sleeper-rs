@@ -1,3 +1,4 @@
+use core::fmt;
 use std::collections::HashMap;
 
 use serde::{ Serialize, Deserialize };
@@ -158,6 +159,22 @@ pub enum RosterPosition {
     DEF,
     BN,
     IDP
+}
+
+impl std::fmt::Display for RosterPosition {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            RosterPosition::QB   => write!(f, "QB"),
+            RosterPosition::RB   => write!(f, "RB"),
+            RosterPosition::WR   => write!(f, "WR"),
+            RosterPosition::TE   => write!(f, "TE"),
+            RosterPosition::FLEX => write!(f, "FLEX"),
+            RosterPosition::K    => write!(f, "K"),
+            RosterPosition::DEF  => write!(f, "DEF"),
+            RosterPosition::BN   => write!(f, "BN"),
+            RosterPosition::IDP  => write!(f, "IDP"),
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
