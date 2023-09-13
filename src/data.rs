@@ -9,7 +9,7 @@ pub type LeagueId = String;
 pub type PlayerId = String;
 pub type OwnerId = String;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct League {
     pub total_rosters: u8,
     pub status: String,
@@ -43,14 +43,14 @@ pub struct League {
     pub avatar: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct LeagueMetadata {
     pub latest_league_winner_roster_id: Option<String>,
     pub keeper_deadline: String,
     pub auto_continue: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct LeagueSettings {
     pub daily_waivers_last_ran: u16,
     pub reserve_allow_cov: u8,
@@ -100,7 +100,7 @@ pub struct LeagueSettings {
     pub best_ball: u8
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ScoringSettings {
     pub st_ff: f64,
     pub pts_allow_7_13: f64,
@@ -148,7 +148,7 @@ pub struct ScoringSettings {
     pub sack: f64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum RosterPosition {
     QB,
     RB,
@@ -161,7 +161,7 @@ pub enum RosterPosition {
     IDP
 }
 
-impl std::fmt::Display for RosterPosition {
+impl fmt::Display for RosterPosition {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             RosterPosition::QB   => write!(f, "QB"),
@@ -177,7 +177,7 @@ impl std::fmt::Display for RosterPosition {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Roster {
     pub taxi: Value,
     pub starters: Vec<String>,
@@ -193,7 +193,7 @@ pub struct Roster {
     pub co_owners: Value, 
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct RosterSettings {
     pub wins: u8,
     pub waiver_position: u16,
@@ -204,7 +204,7 @@ pub struct RosterSettings {
     pub fpts: f64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SleeperUser {
     pub user_id: String,
     pub username: Option<String>,
@@ -218,7 +218,7 @@ pub struct SleeperUser {
     pub avatar: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Matchup {
     starters_points: Vec<f64>,
     starters: Vec<PlayerId>,
@@ -230,14 +230,14 @@ pub struct Matchup {
     custom_points: Option<HashMap<String, String>>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum SleeperSport {
     NFL,
     NBA,
     LCS,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum InjuryStatus {
     Healthy,
     InjuredReserve,
@@ -313,7 +313,7 @@ impl SleeperSport {
     }
 }
 
-#[derive(Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SportState {
     pub week: u8,
     pub season_type: String,
@@ -326,7 +326,7 @@ pub struct SportState {
     pub display_week: u8,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NflPlayer {
     pub birth_city: Option<String>,
     pub status: Option<String>,
