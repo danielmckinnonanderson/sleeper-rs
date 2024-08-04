@@ -1,4 +1,5 @@
 # sleeper-rs
-An async client for the Sleeper fantasy sports API.
+An async Sleeper fantasy sports API client for Rust.
 
-As of now very incomplete.
+As of now very incomplete -- Pull requests welcome!
+
