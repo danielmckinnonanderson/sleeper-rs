@@ -131,8 +131,8 @@ impl Client {
                             Err(SleeperError::DeserializationError("Error trying to deserialize from JSON raw string to HashMap<PlayerId, NflPlayer>".to_string()))
                         }
                     }
-                    SleeperSport::LCS => todo!(),
-                    SleeperSport::NBA => todo!(),
+                    SleeperSport::LCS => todo!("Only NFL is supported currently. Consider opening a pull request!"),
+                    SleeperSport::NBA => todo!("Only NFL is supported currently. Consider opening a pull request!"),
                 }
             }
             Err(_) => Err(SleeperError::DeserializationError(String::from("String"))) // TODO lol
@@ -156,4 +156,3 @@ impl Client {
         }
     }
 }
-
