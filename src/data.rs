@@ -22,7 +22,7 @@ pub struct League {
     pub roster_positions: Vec<RosterPosition>,
     pub previous_league_id: String,
     pub name: String,
-    pub metadata: LeagueMetadata,
+    pub metadata: Option<HashMap<String, Option<String>>>,
     pub loser_bracket_id: Option<String>,
     pub league_id: LeagueId,
     pub last_transation_id: Option<String>,
@@ -39,15 +39,8 @@ pub struct League {
     pub group_id: Option<String>,
     pub draft_id: Option<String>,
     pub company_id: Option<String>,
-    pub bracket_id: Option<String>,
+    pub bracket_id: Option<u64>,
     pub avatar: String,
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct LeagueMetadata {
-    pub latest_league_winner_roster_id: Option<String>,
-    pub keeper_deadline: String,
-    pub auto_continue: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
