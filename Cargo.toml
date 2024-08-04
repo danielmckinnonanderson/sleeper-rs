@@ -6,7 +6,7 @@ repository = "https://github.com/danielmckinnonanderson/sleeper-rs"
 license-file = "LICENSE"
 description = "An async Sleeper fantasy sports API client for Rust."
 readme = "README.md"
-keywords = ["sleeper", "fantasy", "sports", "api", "client", "football", "dfs"]
+keywords = ["sleeper", "fantasy", "sports", "football", "dfs"]
 
 [dependencies]
 http = "0.2.9"
