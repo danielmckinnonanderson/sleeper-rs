@@ -1,7 +1,7 @@
 use core::fmt;
 use std::collections::HashMap;
 
-use serde::{ Serialize, Deserialize };
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use thiserror::Error;
 
@@ -23,7 +23,7 @@ pub struct League {
     pub previous_league_id: String,
     pub name: String,
     pub metadata: Option<HashMap<String, Option<String>>>,
-    pub loser_bracket_id: Option<String>,
+    pub loser_bracket_id: Option<u64>,
     pub league_id: LeagueId,
     pub last_transation_id: Option<String>,
     pub last_read_id: Option<String>,
@@ -45,52 +45,53 @@ pub struct League {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct LeagueSettings {
-    pub daily_waivers_last_ran: u16,
-    pub reserve_allow_cov: u8,
-    pub reserve_slots: u8,
-    pub leg: u8,
-    pub offseason_adds: u8,
-    pub bench_lock: u8, 
-    pub trade_review_days: u8,
-    pub league_average_match: u8,
     pub waiver_type: u8,
-    pub max_keepers: u8,
+    pub waiver_day_of_week: u8,
+    pub waiver_clear_days: u8,
+    pub waiver_budget: u8,
+    pub veto_votes_needed: u8,
+    pub veto_show_votes: u8,
+    pub veto_auto_poll: u8,
+    pub trade_review_days: u8,
+    pub trade_deadline: u8,
     #[serde(rename(serialize = "type", deserialize = "type"))]
     pub _type: u8,
-    pub pick_trading: u8,
-    pub disable_trades: u8,
-    pub daily_waivers: u8,
     pub taxi_years: u8,
-    pub trade_deadline: u8,
-    pub veto_show_votes: u8,
+    pub taxi_slots: u8,
+    pub taxi_deadline: u8,
+    pub taxi_allow_vets: u8,
+    pub squads: u8,
+    pub start_week: u8,
+    pub reserve_slots: u8,
     pub reserve_allow_sus: u8,
     pub reserve_allow_out: u8,
-    pub playoff_round_type: u8,
-    pub waiver_day_of_week: u8,
-    pub taxi_allow_vets: u8,
-    pub reserve_allow_dnr: u8,
-    pub veto_auto_poll: u8,
-    pub commissioner_direct_invite: u8,
-    pub reserve_allow_doubtful: u8,
-    pub waiver_clear_days: u8,
-    pub playoff_week_start: u8,
-    pub daily_waivers_days: u16,
-    pub taxi_slots: u8,
-    pub playoff_type: u8,
-    pub daily_waivers_hour: u32,
-    pub num_teams: u8,
-    pub squads: u8,
-    pub veto_votes_needed: u8,
-    pub playoff_teams: u8,
-    pub playoff_seed_type: u8,
-    pub start_week: u8,
     pub reserve_allow_na: u8,
-    pub draft_rounds: u8,
-    pub taxi_deadline: u8,
-    pub capacity_override: u8,
+    pub reserve_allow_doubtful: u8,
+    pub reserve_allow_dnr: u8,
+    pub reserve_allow_cov: u8,
+    pub playoff_week_start: u8,
+    pub playoff_type: u8,
+    pub playoff_seed_type: u8,
+    pub playoff_round_type: u8,
+    pub playoff_teams: u8,
+    pub pick_trading: u8,
+    pub offseason_adds: u8,
+    pub num_teams: u8,
+    pub max_keepers: u8,
+    pub leg: u8,
+    pub league_average_match: u8,
+    pub last_report: u8,
+    pub disable_trades: u8,
     pub disable_adds: u8,
-    pub waiver_budget: u8,
-    pub best_ball: u8
+    pub draft_rounds: u8,
+    pub daily_waivers_last_ran: u16,
+    pub daily_waivers_hour: u32,
+    pub daily_waivers_days: u16,
+    pub daily_waivers: u8,
+    pub commissioner_direct_invite: u8,
+    pub capacity_override: u8,
+    pub best_ball: u8,
+    pub bench_lock: u8,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -151,21 +152,21 @@ pub enum RosterPosition {
     K,
     DEF,
     BN,
-    IDP
+    IDP,
 }
 
 impl fmt::Display for RosterPosition {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            RosterPosition::QB   => write!(f, "QB"),
-            RosterPosition::RB   => write!(f, "RB"),
-            RosterPosition::WR   => write!(f, "WR"),
-            RosterPosition::TE   => write!(f, "TE"),
+            RosterPosition::QB => write!(f, "QB"),
+            RosterPosition::RB => write!(f, "RB"),
+            RosterPosition::WR => write!(f, "WR"),
+            RosterPosition::TE => write!(f, "TE"),
             RosterPosition::FLEX => write!(f, "FLEX"),
-            RosterPosition::K    => write!(f, "K"),
-            RosterPosition::DEF  => write!(f, "DEF"),
-            RosterPosition::BN   => write!(f, "BN"),
-            RosterPosition::IDP  => write!(f, "IDP"),
+            RosterPosition::K => write!(f, "K"),
+            RosterPosition::DEF => write!(f, "DEF"),
+            RosterPosition::BN => write!(f, "BN"),
+            RosterPosition::IDP => write!(f, "IDP"),
         }
     }
 }
@@ -183,7 +184,7 @@ pub struct Roster {
     pub metadata: Value,
     pub league_id: LeagueId,
     pub keepers: Value,
-    pub co_owners: Value, 
+    pub co_owners: Value,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -239,7 +240,7 @@ pub enum InjuryStatus {
     Out,
     PUP,
     Questionable,
-    Suspended
+    Suspended,
 }
 
 impl InjuryStatus {
@@ -252,7 +253,7 @@ impl InjuryStatus {
             "na" => Ok(InjuryStatus::NotActive),
             "pup" => Ok(InjuryStatus::PUP),
             "sus" => Ok(InjuryStatus::Suspended),
-            unmatched => Err(SleeperError::InvalidInjuryStatus(unmatched.to_string()))
+            unmatched => Err(SleeperError::InvalidInjuryStatus(unmatched.to_string())),
         }
     }
 
@@ -260,14 +261,16 @@ impl InjuryStatus {
         match node {
             Value::String(s) => InjuryStatus::from_str(s),
             Value::Null => Ok(InjuryStatus::Healthy),
-            _ => Err(SleeperError::InvalidInjuryStatus("{ an object }".to_string()))
+            _ => Err(SleeperError::InvalidInjuryStatus(
+                "{ an object }".to_string(),
+            )),
         }
     }
 
     pub fn from_opt_string(s: Option<String>) -> Result<Self, SleeperError> {
         match s {
             Some(s) => InjuryStatus::from_str(s.as_ref()),
-            None => Ok(InjuryStatus::Healthy)
+            None => Ok(InjuryStatus::Healthy),
         }
     }
 }
@@ -275,14 +278,14 @@ impl InjuryStatus {
 impl fmt::Display for InjuryStatus {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            InjuryStatus::Healthy        => write!(f, "Healthy"),
+            InjuryStatus::Healthy => write!(f, "Healthy"),
             InjuryStatus::InjuredReserve => write!(f, "Injured Reserve"),
-            InjuryStatus::Covid          => write!(f, "COVID-19"),
-            InjuryStatus::NotActive      => write!(f, "Inactive"),
-            InjuryStatus::Out            => write!(f, "Out"),
-            InjuryStatus::PUP            => write!(f, "PUP"),
-            InjuryStatus::Questionable   => write!(f, "Questionable"),
-            InjuryStatus::Suspended      => write!(f, "Suspended")
+            InjuryStatus::Covid => write!(f, "COVID-19"),
+            InjuryStatus::NotActive => write!(f, "Inactive"),
+            InjuryStatus::Out => write!(f, "Out"),
+            InjuryStatus::PUP => write!(f, "PUP"),
+            InjuryStatus::Questionable => write!(f, "Questionable"),
+            InjuryStatus::Suspended => write!(f, "Suspended"),
         }
     }
 }
@@ -293,7 +296,7 @@ impl SleeperSport {
             "nfl" => Ok(SleeperSport::NFL),
             "nba" => Ok(SleeperSport::NBA),
             "lcs" => Ok(SleeperSport::LCS),
-            unmatched => Err(SleeperError::InvalidSport(unmatched.to_string()))
+            unmatched => Err(SleeperError::InvalidSport(unmatched.to_string())),
         }
     }
 
@@ -389,6 +392,211 @@ pub enum SleeperError {
     InvalidSport(String),
 
     #[error("could parse String into PlayerStatus: \"{0}\" was not a valid injury designation")]
-    InvalidInjuryStatus(String)
+    InvalidInjuryStatus(String),
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_deserialize_league_from_json_succeeds() {
+        let json_str = r#"
+        {
+            "name": "League name",
+            "status": "complete",
+            "metadata": {
+                "auto_continue": "on",
+                "continued": "yes",
+                "keeper_deadline": "0",
+                "latest_league_winner_roster_id": "2"
+            },
+            "settings": {
+                "best_ball": 0,
+                "last_report": 14,
+                "waiver_budget": 100,
+                "disable_adds": 0,
+                "capacity_override": 0,
+                "taxi_deadline": 0,
+                "draft_rounds": 3,
+                "reserve_allow_na": 0,
+                "start_week": 1,
+                "playoff_seed_type": 0,
+                "playoff_teams": 6,
+                "veto_votes_needed": 5,
+                "squads": 1,
+                "num_teams": 10,
+                "daily_waivers_hour": 0,
+                "playoff_type": 0,
+                "taxi_slots": 0,
+                "last_scored_leg": 17,
+                "daily_waivers_days": 1093,
+                "playoff_week_start": 15,
+                "waiver_clear_days": 2,
+                "reserve_allow_doubtful": 0,
+                "commissioner_direct_invite": 0,
+                "veto_auto_poll": 0,
+                "reserve_allow_dnr": 0,
+                "taxi_allow_vets": 0,
+                "waiver_day_of_week": 2,
+                "playoff_round_type": 0,
+                "reserve_allow_out": 1,
+                "reserve_allow_sus": 0,
+                "veto_show_votes": 0,
+                "trade_deadline": 99,
+                "taxi_years": 0,
+                "daily_waivers": 0,
+                "disable_trades": 0,
+                "pick_trading": 1,
+                "type": 1,
+                "max_keepers": 3,
+                "waiver_type": 0,
+                "league_average_match": 0,
+                "trade_review_days": 3,
+                "bench_lock": 1,
+                "offseason_adds": 1,
+                "leg": 17,
+                "reserve_slots": 1,
+                "reserve_allow_cov": 1,
+                "daily_waivers_last_ran": 27
+            },
+              "avatar": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "company_id": null,
+              "shard": 434,
+              "season": "2023",
+              "season_type": "regular",
+              "sport": "nfl",
+              "scoring_settings": {
+                "sack": 1,
+                "fgm_40_49": 4,
+                "pass_int": -1,
+                "pts_allow_0": 10,
+                "pass_2pt": 2,
+                "st_td": 6,
+                "rec_td": 6,
+                "fgm_30_39": 3,
+                "xpmiss": 0,
+                "rush_td": 6,
+                "def_pr_td": 0,
+                "rec_2pt": 2,
+                "st_fum_rec": 2,
+                "fgmiss": 0,
+                "ff": 0,
+                "rec": 0,
+                "pts_allow_14_20": 1,
+                "fgm_0_19": 3,
+                "def_kr_td": 0,
+                "int": 2,
+                "def_st_fum_rec": 2,
+                "fum_lost": -2,
+                "pts_allow_1_6": 7,
+                "fgm_20_29": 3,
+                "pts_allow_21_27": 0,
+                "xpm": 1,
+                "rush_2pt": 2,
+                "fum_rec": 2,
+                "def_st_td": 6,
+                "fgm_50p": 5,
+                "def_td": 6,
+                "safe": 2,
+                "pass_yd": 0.03999999910593033,
+                "blk_kick": 2,
+                "pass_td": 4,
+                "rush_yd": 0.10000000149011612,
+                "fum": 0,
+                "pts_allow_28_34": -1,
+                "pts_allow_35p": -4,
+                "fum_rec_td": 6,
+                "rec_yd": 0.10000000149011612,
+                "def_st_ff": 0,
+                "pts_allow_7_13": 4,
+                "st_ff": 0
+              },
+              "last_message_id": "1111111111111111111",
+              "last_author_avatar": null,
+              "last_author_display_name": "sys",
+              "last_author_id": "666666666666666666",
+              "last_author_is_bot": true,
+              "last_message_attachment": null,
+              "last_message_text_map": null,
+              "last_message_time": 1704267066920,
+              "last_pinned_message_id": "555555555555555555",
+              "last_read_id": null,
+              "draft_id": "888888888888888888",
+              "league_id": "999999999999999999",
+              "previous_league_id": "777777777777777777",
+              "bracket_id": 1111111111111111111,
+              "group_id": null,
+              "roster_positions": [
+                "QB",
+                "RB",
+                "RB",
+                "WR",
+                "WR",
+                "WR",
+                "TE",
+                "FLEX",
+                "FLEX",
+                "K",
+                "DEF",
+                "BN",
+                "BN",
+                "BN",
+                "BN",
+                "BN",
+                "BN",
+                "BN"
+              ],
+              "loser_bracket_id": 1111111111111111111,
+              "total_rosters": 10
+        }"#;
+
+        let result: Result<League, _> = serde_json::from_str(json_str);
+        assert_eq!(result.is_ok(), true);
+        let league = result.unwrap();
+        assert_eq!(league.name, "League name");
+        assert_eq!(league.status, "complete");
+        assert_eq!(league.settings.best_ball, 0);
+        assert_eq!(league.settings.last_report, 14);
+        assert_eq!(league.settings.waiver_budget, 100);
+        assert_eq!(league.settings.disable_adds, 0);
+        assert_eq!(league.settings.capacity_override, 0);
+        assert_eq!(league.settings.taxi_deadline, 0);
+        assert_eq!(league.settings.draft_rounds, 3);
+        assert_eq!(league.settings.reserve_allow_na, 0);
+        assert_eq!(league.settings.start_week, 1);
+        assert_eq!(league.settings.playoff_seed_type, 0);
+        assert_eq!(league.settings.playoff_teams, 6);
+        assert_eq!(league.settings.veto_votes_needed, 5);
+        assert_eq!(league.settings.squads, 1);
+        assert_eq!(league.settings.num_teams, 10);
+        assert_eq!(league.settings.daily_waivers_hour, 0);
+        assert_eq!(league.settings.playoff_type, 0);
+        assert_eq!(league.avatar, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        assert_eq!(league.company_id, None);
+        assert_eq!(league.shard, 434);
+        assert_eq!(league.season, "2023");
+        assert_eq!(league.season_type, "regular");
+        assert_eq!(league.sport, "nfl");
+        assert_eq!(league.scoring_settings.sack, 1.0);
+        assert_eq!(league.scoring_settings.fgm_40_49, 4.0);
+        assert_eq!(league.scoring_settings.pass_int, -1.0);
+        assert_eq!(league.scoring_settings.pts_allow_0, 10.0);
+        assert_eq!(league.scoring_settings.pass_2pt, 2.0);
+        assert_eq!(league.scoring_settings.st_td, 6.0);
+        assert_eq!(league.scoring_settings.rec_td, 6.0);
+        assert_eq!(league.scoring_settings.fgm_30_39, 3.0);
+        assert_eq!(league.scoring_settings.xpmiss, 0.0);
+        assert_eq!(league.scoring_settings.rush_td, 6.0);
+        assert_eq!(league.scoring_settings.def_pr_td, 0.0);
+        assert_eq!(league.scoring_settings.rec_2pt, 2.0);
+    }
+
+    #[test]
+    fn test_deserialize_league_from_json_deserialization_error() {
+        let json_str = r#"{ "invalid_field": null }"#;
+
+        let result: Result<League, _> = serde_json::from_str(json_str);
+        assert_eq!(result.is_err(), true);
+    }
+}
